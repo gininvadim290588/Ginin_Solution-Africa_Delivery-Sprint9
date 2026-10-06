@@ -1,1 +1,30 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 16
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 14
+skinparam rectangle {
+  BorderColor #475569
+  FontColor #172033
+}
+title Влияние / интерес — Africa Delivery
+
+rectangle "**Высокое влияние / умеренный интерес**\n\n**Держать удовлетворёнными**\nРегуляторы NG / KE / ZA — 5/2\nПлатёжные и логистические партнёры — 4/3\nОбязательные условия — P0" as hi_li #F1F5F9
+rectangle "**Высокое влияние / высокий интерес**\n\n**Работать непосредственно**\nК. Орлов — 5/5, P1\nАнна Вебер — 5/5, P2\nМ. Лефевр — 4/5, P2\nРаджеш Менон — 4/5, P3\nАдаезе Нвосу / DPO — 4/4, P0" as hi_hi #DBEAFE
+rectangle "**Низкое влияние / интерес неизвестен**\n\n**Не делать зависимостью проекта**\nБывший PM Том Брэдли — 0/?\nЕго список — источник, не мандат" as li_li #F8FAFC
+rectangle "**Низкое / среднее влияние / высокий интерес**\n\n**Вовлекать и информировать**\nМаркетинг, архитектор — 3/5\nКонтракторы, местные операторы — 2/4\nПокупатели и продавцы — 1/5" as li_hi #DCFCE7
+
+hi_li -[hidden]right-> hi_hi
+hi_li -[hidden]down-> li_li
+hi_hi -[hidden]down-> li_hi
+li_li -[hidden]right-> li_hi
+
+legend bottom
+Шкала 0–5: высокое влияние и высокий интерес — от 4.
+P0 — обязательные условия; P1 — инвестор; P2 — финансы и релиз; P3 — реализация.
+Источники: А1–А8 и контекст кейса. Оценки рекомендованы до встречи в Найроби.
+endlegend
+@enduml
 
