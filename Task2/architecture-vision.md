@@ -22,7 +22,7 @@ Android/мобильный web: кэш и постепенные изображ�
 
 Модули ядра и фоновый процесс, а не пять микросервисов. Go/PostgreSQL, контейнеры/Linux, HTTPS API/webhook, транзакционное сохранение событий, метрики/логи. Kafka/Istio/Oracle/Kubernetes — после триггера/расчёта. Состав из А8, переносимость из А5, стоимость/партнёрство из А3/А6.
 
-[C4](c4-context.png) / [исходник](c4-context.puml); [Use Cases](use-cases.png) / [исходник](use-cases.puml). Внешние: M-Pesa, Flutterwave, Paystack, Sendbox, Sendy, WhatsApp Business API, SMS/USSD. Paystack вне MVP; Sendy — кандидат из кейса, доступность/API неизвестны. CEO проверяет перевозчика KE; резерв — ручное оформление доставки. Платформа ведёт учёт, PSP исполняет платёж, перевозчик доставляет. USSD статуса/выдачи — при доступном short code (А3, с.2; А5, с.2; А8; кейс).
+[C4](Diagrams/c4-context.png) / [исходник](c4-context.puml); [Use Cases](use-cases.png) / [исходник](use-cases.puml). Внешние: M-Pesa, Flutterwave, Paystack, Sendbox, Sendy, WhatsApp Business API, SMS/USSD. Paystack вне MVP; Sendy — кандидат из кейса, доступность/API неизвестны. CEO проверяет перевозчика KE; резерв — ручное оформление доставки. Платформа ведёт учёт, PSP исполняет платёж, перевозчик доставляет. USSD статуса/выдачи — при доступном short code (А3, с.2; А5, с.2; А8; кейс).
 
 ## 3. Данные и качество
 
