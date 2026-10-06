@@ -1,0 +1,65 @@
+@startuml use-cases
+!pragma layout smetana
+left to right direction
+skinparam defaultFontName DejaVu Sans
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam usecaseBackgroundColor #E8F1F4
+skinparam usecaseBorderColor #254F60
+title Africa Delivery — ключевые сценарии MVP (NG / KE)
+actor "Покупатель" as buyer
+actor "Продавец" as seller
+actor "Оператор / ПВЗ" as ops
+actor "CEO" as ceo
+actor "Финансовый оператор / CFO" as finance
+actor "Лицензированный PSP\nM-Pesa / Flutterwave" as psp
+actor "Логистический партнёр" as logistics
+actor "Шлюз SMS / WhatsApp" as messages
+rectangle "Africa Delivery — граница ответственности" {
+ usecase "Найти товар и\nпосмотреть каталог" as browse
+ usecase "Зарегистрироваться /\nвойти в кабинет" as account
+ usecase "Оформить заказ:\nтовар, ПВЗ или ориентир" as order
+ usecase "Проверить и\nзарезервировать наличие" as stock
+ usecase "Оплатить заказ" as pay
+ usecase "Подтвердить оплату /\nсверить неопределённый платёж" as confirm
+ usecase "Посмотреть заказ\nи статус в кабинете" as status
+ usecase "Передать заказ\nна доставку" as deliver
+ usecase "Уведомить о заказе\nи готовности к выдаче" as notify
+ usecase "Подтвердить получение\nпо коду, без интернета у покупателя" as pickup
+ usecase "Зарегистрировать продавца /\nпередать товары и остатки" as onboard
+ usecase "Проверить продавца /\nтовар и опубликовать" as moderate
+ usecase "Сверить выплату /\nобработать возврат вручную" as settle
+ usecase "Посмотреть продажи,\nоплаты и исключения" as report
+}
+buyer --> browse
+buyer --> account
+buyer --> order
+buyer --> pay
+buyer --> status
+buyer --> pickup
+order .> stock : <<include>>
+psp --> pay
+psp --> confirm
+finance --> confirm
+ops --> deliver
+logistics --> deliver
+ops --> pickup
+ops --> notify
+messages --> notify
+seller --> onboard
+ops --> moderate
+finance --> settle
+ceo --> report
+note bottom of order
+  Оплата может завершиться позже оформления.
+  В доставку поступает только подтверждённая оплата.
+  Кэш / SMS не подтверждают финансовую операцию.
+end note
+note bottom of pickup
+  Покупатель предъявляет SMS-код при GSM-связи.
+  У оператора нужен защищённый канал проверки;
+  при полном обрыве выдача ожидает сверки.
+end note
+footer Источники: кейс MVP; A1 с.3; A3 с.2; A4 (каталог/каналы/выдача); A8. Assumptions: один продавец и валюта в заказе; возвраты/сверка обязательны, полноценный бэк-офис отложен; видео и полный USSD-checkout вне MVP.
+@enduml
