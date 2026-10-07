@@ -4,10 +4,10 @@
 
 | Файл | Что содержит / когда читать |
 |---|---|
-| [options-comparison.md](africa-delivery-task-2-2026-10-05/options-comparison.md) | Сравнение модульного монолита, шести сервисов и варианта CTO по срокам, стоимости, команде, масштабу и риску |
-| [tco-model.xlsx](africa-delivery-task-2-2026-10-05/tco-model.xlsx) | Пятилетняя модель на основе Excel-шаблона: ФОТ, техника и прочие затраты, стоимость заказа и ошибки спроса; начинать с листа «Контроль» |
-| [adr-001-architecture-style.md](africa-delivery-task-2-2026-10-05/adr-001-architecture-style.md) | Предложенный выбор стиля, расчёт, альтернативы, последствия и условия пересмотра |
-| [c4-context.puml](africa-delivery-task-2-2026-10-05/c4-context.puml), [PNG](africa-delivery-task-2-2026-10-05/c4-context.png) | Граница платформы, роли, внешние системы и подписанные связи |
+| [options-comparison.md](/Task2/options-comparison.md) | Сравнение модульного монолита, шести сервисов и варианта CTO по срокам, стоимости, команде, масштабу и риску |
+| [tco-model.xlsx](/Task2/tco-model.xlsx) | Пятилетняя модель на основе Excel-шаблона: ФОТ, техника и прочие затраты, стоимость заказа и ошибки спроса; начинать с листа «Контроль» |
+| [adr-001-architecture-style.md](/Task2/adr-001-architecture-style.md) | Предложенный выбор стиля, расчёт, альтернативы, последствия и условия пересмотра |
+| [c4-context.puml](/Task2/c4-context.puml), [PNG](/Task2/c4-context.png) | Граница платформы, роли, внешние системы и подписанные связи |
 | [use-cases.puml](africa-delivery-task-2-2026-10-05/use-cases.puml), [PNG](africa-delivery-task-2-2026-10-05/use-cases.png) | Ключевые пользовательские сценарии MVP |
 | [architecture-vision.md](africa-delivery-task-2-2026-10-05/architecture-vision.md) | Единое описание объёма, ответственности, качества, экономики, дорожной карты и рисков |
 | [fmea.md](africa-delivery-task-2-2026-10-05/fmea.md) | Анализ рисков этапа выбора архитектуры; операционные отказы подробнее рассматриваются в Task3 |
