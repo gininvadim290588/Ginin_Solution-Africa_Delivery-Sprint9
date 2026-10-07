@@ -10,7 +10,6 @@
 | [c4-context.puml](/Task2/c4-context.puml), [PNG](/Task2/c4-context.png) | Граница платформы, роли, внешние системы и подписанные связи |
 | [use-cases.puml](africa-delivery-task-2-2026-10-05/use-cases.puml), [PNG](africa-delivery-task-2-2026-10-05/use-cases.png) | Ключевые пользовательские сценарии MVP |
 | [architecture-vision.md](africa-delivery-task-2-2026-10-05/architecture-vision.md) | Единое описание объёма, ответственности, качества, экономики, дорожной карты и рисков |
-| [fmea.md](africa-delivery-task-2-2026-10-05/fmea.md) | Анализ рисков этапа выбора архитектуры; операционные отказы подробнее рассматриваются в Task3 |
 | [nairobi-slide.pptx](africa-delivery-task-2-2026-10-05/nairobi-slide.pptx) | Один слайд для совместной встречи четырёх стейкхолдеров |
 | [nairobi-script.md](africa-delivery-task-2-2026-10-05/nairobi-script.md) | Транскрипт десятиминутного выступления |
 
