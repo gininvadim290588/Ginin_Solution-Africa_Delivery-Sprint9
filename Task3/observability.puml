@@ -1,0 +1,53 @@
+@startuml
+!pragma layout elk
+skinparam defaultFontName DejaVu Sans
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam ArrowColor #475569
+skinparam componentBackgroundColor #EFF6FF
+skinparam componentBorderColor #2563EB
+skinparam databaseBackgroundColor #F0FDF4
+skinparam databaseBorderColor #16A34A
+title Africa Delivery — сбор сигналов и вызов дежурного
+
+package "Разрешённая среда одной страны\nОтдельно для Нигерии и Кении" {
+  rectangle "Публичный вход" as edge
+  component "Основное приложение\nКаталог и оплата" as app
+  component "Фоновые задачи\nПартнёры и уведомления" as worker
+  component "OpenTelemetry Collector\nПриём логов и трасс" as collector
+  database "Prometheus\nМетрики и SLI" as prom
+  database "Loki\nЛоги" as loki
+  database "Tempo\nТрассировки" as tempo
+  component "Grafana\nДашборды и поиск причины" as grafana
+  component "Alertmanager\nТревоги и эскалация" as alert
+}
+package "Другая разрешённая зона отказа" {
+  component "Независимая проверка\nПубличный адрес и контроль мониторинга" as probe
+}
+actor "Дежурный\nCTO / CFO / CEO при эскалации" as duty
+
+edge --> app : Запросы
+app --> worker : События с номером операции
+edge --> prom : Ошибки и время ответа
+app --> prom : Метрики приложения
+worker --> prom : Очередь и сроки событий
+app --> collector : Логи и трассы
+worker --> collector : Логи и трассы
+collector --> loki : Структурированные события
+collector --> tempo : Этапы обработки
+prom --> grafana : Показатели качества
+loki --> grafana : Поиск событий
+tempo --> grafana : Путь запроса
+prom --> alert : Нарушенные правила
+alert --> duty : Основной вызов
+probe --> edge : Минутные проверки
+probe --> prom : Результаты проверок
+probe --> duty : Независимый резервный вызов
+grafana --> duty : Данные для расследования
+
+legend bottom
+  Схема сбора, а не карта микросервисов.
+  Персональные журналы и трассы не объединяются между странами.
+endlegend
+@enduml
