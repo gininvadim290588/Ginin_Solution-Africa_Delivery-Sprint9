@@ -7,10 +7,9 @@
 | [options-comparison.md](/Task2/options-comparison.md) | Сравнение модульного монолита, шести сервисов и варианта CTO по срокам, стоимости, команде, масштабу и риску |
 | [tco-model.xlsx](/Task2/tco-model.xlsx) | Пятилетняя модель на основе Excel-шаблона: ФОТ, техника и прочие затраты, стоимость заказа и ошибки спроса; начинать с листа «Контроль» |
 | [adr-001-architecture-style.md](/Task2/adr-001-architecture-style.md) | Предложенный выбор стиля, расчёт, альтернативы, последствия и условия пересмотра |
-| [c4-context.puml](/Task2/c4-context.puml), [PNG](/Task2/c4-context.png) | Граница платформы, роли, внешние системы и подписанные связи |
-| [use-cases.puml](africa-delivery-task-2-2026-10-05/use-cases.puml), [PNG](africa-delivery-task-2-2026-10-05/use-cases.png) | Ключевые пользовательские сценарии MVP |
-| [architecture-vision.md](africa-delivery-task-2-2026-10-05/architecture-vision.md) | Единое описание объёма, ответственности, качества, экономики, дорожной карты и рисков |
-| [nairobi-slide.pptx](africa-delivery-task-2-2026-10-05/nairobi-slide.pptx) | Один слайд для совместной встречи четырёх стейкхолдеров |
-| [nairobi-script.md](africa-delivery-task-2-2026-10-05/nairobi-script.md) | Транскрипт десятиминутного выступления |
+| [c4-context.puml](/Task2/c4-context.puml), [PNG](/Task2/c4-context.png) | Граница платформы, роли, внешние системы и подписанные связи |(/Task2/use-cases.png) | Ключевые пользовательские сценарии MVP |
+| [architecture-vision.md](/Task2/architecture-vision.md) | Единое описание объёма, ответственности, качества, экономики, дорожной карты и рисков |
+| [nairobi-slide.pptx](/Task2/nairobi-slide.pptx) | Один слайд для совместной встречи четырёх стейкхолдеров |
+| [nairobi-script.md](/Task2/nairobi-script.md) | Транскрипт десятиминутного выступления |
 
 **Предложенное направление:** модульный монолит Go/PostgreSQL с фоновым процессом, отдельными национальными контурами и партнёрскими платежами/доставкой. Обоснование и негативные последствия — в ADR-001; требования к отказоустойчивости детализированы в Task3. Готовность полного greenfield-MVP к 15 октября не доказана: сроки разработки не начинаются заново после выбора архитектуры.
