@@ -57,7 +57,7 @@
 | timeSliceWindow / timeSliceTarget | Для минутных проверок: 1 мин / 1,0; проверка целиком успешна либо нет |
 | budgetingMethod | `Occurrences`; для минутных проверок — `Timeslices` |
 
-Markdown-описание по [OpenSLO](https://openslo.com/specification/); правило нулевых дублей проверяется отдельно, а не маскируется средним процентом.
+описание по [OpenSLO](https://openslo.com/specification/); правило нулевых дублей проверяется отдельно, а не маскируется средним процентом.
 
 ## Источники
 
