@@ -52,7 +52,7 @@ USSD — отдельный телефонный запрос статуса, а
 | timeWindow | `30d`, скользящий период; задержка оценки 60/300 с соответственно |
 | budgetingMethod | `Occurrences` — считаем события |
 
-Markdown-описание по [OpenSLO](https://openslo.com/specification/). Договорные условия доставки дополняют модель SLO.
+описание по [OpenSLO](https://openslo.com/specification/). Договорные условия доставки дополняют модель SLO.
 
 ## Источники
 
