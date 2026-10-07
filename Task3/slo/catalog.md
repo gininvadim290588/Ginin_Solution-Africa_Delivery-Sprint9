@@ -49,7 +49,7 @@
 | timeSliceWindow / timeSliceTarget | Для минутных проверок: 1 мин / 1,0; проверка целиком успешна либо нет |
 | budgetingMethod | `Occurrences` для запросов; `Timeslices` для минутных проверок |
 
-Это Markdown-описание по [модели OpenSLO](https://openslo.com/specification/), не готовый YAML-манифест. Договорный SLA описан отдельно: OpenSLO задаёт цели измерения.
+Это описание по [модели OpenSLO](https://openslo.com/specification/), не готовый YAML-манифест. Договорный SLA описан отдельно: OpenSLO задаёт цели измерения.
 
 ## Источники
 
