@@ -20,9 +20,9 @@
 
 ¹ Шкала 0–5; влияние ≥4 — высокое. Интерес означает вовлечённость именно в Africa Delivery. Влияние клиентов указано индивидуально; агрегированное поведение критично бизнесу.
 
-![Матрица влияния и интереса](/Task1/Diagrams/stakeholder-influence-interest.png)
+![Матрица влияния и интереса](../Task1/Diagrams/stakeholder-influence-interest.png)
 
-Исходник: [stakeholder-influence-interest.puml](/Task1/Diagrams/stakeholder-influence-interest.puml).
+Исходник: [stakeholder-influence-interest.puml](Diagrams/stakeholder-influens-interest.puml).
 
 ## Assumptions
 
