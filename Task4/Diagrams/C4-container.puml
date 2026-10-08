@@ -1,0 +1,80 @@
+@startuml c4-container
+!pragma layout smetana
+!include <C4/C4_Container>
+LAYOUT_TOP_DOWN()
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 14
+skinparam shadowing false
+title Africa Delivery — C4 Container: национальные контуры данных
+
+Person(customer, "Покупатель / продавец", "Работает в выбранном национальном контуре")
+Person(operator, "Операторы, CEO / CFO", "Операции, сверка, локальные отчёты; доступ из-за рубежа требует допуска")
+Container(client, "Мобильный интерфейс", "HTML / PWA; устройство пользователя", "Каталог, заказ, статус; offline-кеш только публичного контента. Код раздаётся национальным origin")
+
+System_Boundary(platform, "Africa Delivery — одна кодовая база, изоляция по стране") {
+  Boundary(ng, "Нигерия — Layer3Cloud, Lagos / Abuja [кандидат]") {
+    Container(ng_api, "Приложение NG / веб-origin", "Go; OCI / Linux VM", "Каталог, аккаунт, заказы, consent; входящие PSP callbacks. Национальная политика доступа")
+    Container(ng_worker, "Фоновый процесс NG", "Go; OCI / Linux VM", "Outbox, сверка и сообщения; egress только к допущенным получателям")
+    ContainerDb(ng_db, "Транзакционное хранилище NG", "PostgreSQL; primary / standby", "PII, ledger, согласия, статусы и аудит. Один writer; DR внутри Нигерии")
+    Container(ng_keys, "Управление ключами NG", "Национальный сервис секретов", "Отдельные KEK и recovery в Нигерии; доступ по ролям")
+    ContainerDb(ng_store, "Медиа, копии и телеметрия NG", "Object Storage; локальные collectors", "Раздельные buckets и права: WAL/backup, очищенные медиа, логи/traces. Копии только NG")
+  }
+  Boundary(ke, "Кения — Angani, Nairobi + национальный DR [кандидат]") {
+    Container(ke_api, "Приложение KE / веб-origin", "Go; OCI / Linux VM", "Каталог, аккаунт, заказы, consent; входящие PSP callbacks. Национальная политика доступа")
+    Container(ke_worker, "Фоновый процесс KE", "Go; OCI / Linux VM", "Outbox, сверка и сообщения; egress только к допущенным получателям")
+    ContainerDb(ke_db, "Транзакционное хранилище KE", "PostgreSQL; primary / standby", "PII, ledger, согласия, статусы и аудит. Один writer; DR внутри Кении")
+    Container(ke_keys, "Управление ключами KE", "Национальный сервис секретов", "Отдельные KEK и recovery в Кении; доступ по ролям")
+    ContainerDb(ke_store, "Медиа, копии и телеметрия KE", "Object Storage; локальные collectors", "Раздельные buckets и права. Внегородской национальный DR пока не выбран")
+  }
+  Boundary(za, "ЮАР — после MVP: AWS Cape Town + Google Johannesburg") {
+    Container(za_api, "Будущий контур ZA", "Та же Go / OCI кодовая база", "Профиль национальной политики; основной регион AWS af-south-1. В октябре не развёртывается")
+    ContainerDb(za_data, "Будущие данные и recovery ZA", "PostgreSQL; storage / региональные ключи", "Cape Town → DR Johannesburg, только внутри ЮАР; независимое восстановление ключей")
+  }
+}
+
+System_Ext(psp, "Платёжные партнёры", "Flutterwave — NG; M-Pesa — KE; Paystack — после MVP. Страны обработки / договоры требуют проверки")
+System_Ext(logistics, "Логистические партнёры", "Sendbox — NG; Sendy / замена — KE после проверки действующего API. География обработки не доказана")
+System_Ext(messages, "Каналы сообщений", "Национальные SMS/USSD — после допуска; WhatsApp Business API выключен до основания передачи")
+
+Rel(customer, client, "Смотрит товары, оформляет/проверяет заказ", "Мобильный web / HTTPS")
+Rel(client, ng_api, "Работает с аккаунтом и заказом NG", "HTTPS; home-country NG")
+Rel(client, ke_api, "Работает с аккаунтом и заказом KE", "HTTPS; home-country KE")
+Rel(operator, ng_api, "Ведёт операции/сверку, читает локальный отчёт", "MFA / RBAC; допущенный доступ")
+Rel(operator, ke_api, "Ведёт операции/сверку, читает локальный отчёт", "MFA / RBAC; допущенный доступ")
+
+Rel(ng_api, ng_db, "Сохраняет и читает операции / согласия", "TLS / SQL")
+Rel(ng_worker, ng_db, "Читает outbox, сверяет статусы и consent", "TLS / SQL")
+Rel(ng_api, ng_keys, "Получает разрешённые секреты / ключевые операции", "TLS / scoped identity")
+Rel(ng_worker, ng_keys, "Получает ключи допущенных интеграций", "TLS / scoped identity")
+Rel(ng_db, ng_store, "Архивирует WAL и резервные копии", "TLS; шифрование; national backup")
+Rel(ng_api, ng_store, "Читает медиа, пишет очищенную телеметрию", "TLS; отдельные права")
+
+Rel(ke_api, ke_db, "Сохраняет и читает операции / согласия", "TLS / SQL")
+Rel(ke_worker, ke_db, "Читает outbox, сверяет статусы и consent", "TLS / SQL")
+Rel(ke_api, ke_keys, "Получает разрешённые секреты / ключевые операции", "TLS / scoped identity")
+Rel(ke_worker, ke_keys, "Получает ключи допущенных интеграций", "TLS / scoped identity")
+Rel(ke_db, ke_store, "Архивирует WAL и резервные копии", "TLS; шифрование; national backup")
+Rel(ke_api, ke_store, "Читает медиа, пишет очищенную телеметрию", "TLS; отдельные права")
+
+Rel(ng_worker, psp, "Инициирует / сверяет платёж NG, если поток допущен", "HTTPS API; минимум полей")
+Rel(ke_worker, psp, "Инициирует / сверяет платёж KE, если поток допущен", "HTTPS API; минимум полей")
+Rel(psp, ng_api, "Подтверждает события Flutterwave по договору", "Signed webhook / HTTPS")
+Rel(psp, ke_api, "Подтверждает события M-Pesa по договору", "Signed callback / HTTPS")
+Rel(ng_worker, logistics, "Передаёт / сверяет доставку NG после допуска", "HTTPS API; контакт / ориентир")
+Rel(ke_worker, logistics, "Передаёт / сверяет доставку KE после допуска", "HTTPS API; контакт / ориентир")
+Rel(ng_worker, messages, "Отправляет разрешённое сообщение NG", "HTTPS; purpose / consent policy")
+Rel(ke_worker, messages, "Отправляет разрешённое сообщение KE", "HTTPS; purpose / consent policy")
+Rel(messages, ng_api, "Передаёт разрешённый USSD-запрос / delivery report NG", "Национальный gateway / HTTPS")
+Rel(messages, ke_api, "Передаёт разрешённый USSD-запрос / delivery report KE", "Национальный gateway / HTTPS")
+Rel(za_api, za_data, "Будущий национальный учёт и recovery", "TLS; после допуска ZA")
+
+note bottom of platform
+Нет обмена персональными данными между NG, KE и ZA.
+Шифрование / псевдонимизация не являются разрешением экспорта.
+Код и политики переносимы; фактические площадки и договоры ещё не подтверждены.
+Внешние API включаются только после проверки получателей и правового основания.
+end note
+SHOW_LEGEND()
+footer Источники: артефакт 3 «Юридическое письмо», с.1–2; Architecture Vision Task2, разделы 2–3; ADR-003 «Стратегия размещения данных» и карта данных Task4. Assumptions: целевая схема; ZA после пилота; внешний CDN выключен до допуска.
+@enduml
+
