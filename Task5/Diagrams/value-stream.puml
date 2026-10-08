@@ -1,0 +1,58 @@
+@startuml
+!pragma layout smetana
+' Africa Delivery Task5. Sources: artifact-08; Task2 architecture-vision sections 1-2.
+' Capability IDs and costs: capability-map.md. Future capabilities are outside MVP.
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 15
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam ArrowColor #36536B
+skinparam rectangleBorderColor #36536B
+skinparam rectangleBackgroundColor #EFF5FA
+skinparam noteBackgroundColor #FFF5DE
+skinparam noteBorderColor #C7A459
+top to bottom direction
+title Africa Delivery: поток ценности MVP
+
+rectangle "1. Продавец готов к торговле\nC01 Участие продавцов\nC07 Данные и доступ; C08 Контроль доверия\nРезультат: допущенный продавец\nBuild: анкета. Partner: местная проверка" as seller
+rectangle "2. Покупатель находит товар\nC02 Управление ассортиментом\nРезультат: понятное предложение\nBuild: каталог. Buy: готовая PostgreSQL" as offer
+rectangle "3. Покупатель оформляет покупку\nC03 Покупка и управление заказом\nРезультат: один проверяемый заказ\nBuild: клиент, кабинет и учёт заказа" as order
+rectangle "4. Деньги и статус проверены\nC04 Оплата, учёт и расчёты; C09 Связь\nРезультат: достоверный итог оплаты\nPartner: M-Pesa/Flutterwave и SMS\nBuild: сверка и защита от повторов" as pay
+rectangle "5. Покупатель получает товар\nC05 Доставка и выдача; C09 Связь\nРезультат: подтверждённое получение\nPartner: перевозчик и пункт выдачи\nBuild: статус и проверка разрешения выдачи" as receive
+rectangle "6. Обязательства закрыты\nC06 Возвраты и споры; C04 Расчёты; C10 Аналитика\nРезультат: помощь покупателю, проверенная выплата\nBuild: обращение и сводка. Partner: денежная операция" as close
+
+seller --> offer : разрешённые товары и наличие
+offer --> order : выбор и проверка текущей цены
+order --> pay : номер операции и сумма
+pay --> receive : только подтверждённая оплата
+receive --> close : запись выдачи и расчётные обязательства
+
+note right of pay
+При неизвестном результате оплаты
+новое списание и отгрузку не выполняем.
+Проверяем прежнюю операцию.
+end note
+
+note left of receive
+SMS может работать без интернета.
+Покупателю помогает местный оператор.
+Если проверить заказ не может никто,
+выдачу приостанавливаем.
+end note
+
+note bottom of close
+Сквозная основа: C11 Надёжная работа платформы.
+На каждом этапе: C07 Защита данных и разрешённый доступ.
+После MVP: C12 Новые страны/языки; C13 Продажи организациям.
+Выплаты идут по договорному графику; последний этап проверяет их итог.
+Источник возможностей: capability-map.md.
+Это области ответственности, а не 13 микросервисов.
+end note
+
+legend bottom
+Build — собственная разработка
+Buy — готовое ПО или инфраструктура
+Partner — договорная бизнес-услуга
+endlegend
+@enduml
