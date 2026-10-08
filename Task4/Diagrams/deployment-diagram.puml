@@ -1,0 +1,117 @@
+@startuml deployment-diagram
+!pragma layout smetana
+top to bottom direction
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam ArrowColor #475569
+skinparam nodeBackgroundColor #EFF6FF
+skinparam databaseBackgroundColor #DBEAFE
+skinparam packageBackgroundColor #FFFFFF
+skinparam backgroundColor #F8FAFC
+title Africa Delivery — развёртывание и национальный DR
+
+cloud "Мобильный web / SMS / USSD\nКаждый запрос идёт в свой национальный контур" as users
+
+package "Нигерия — выбранный профиль: Layer3Cloud Lagos / Abuja\nФизические VM/fault domains требуют договора" as ng {
+  node "Национальный вход NG\nDNS / TLS / health checks" as ng_edge
+  node "Lagos: домен отказа 1" as ng_site1 {
+    node "VM приложения NG-1" as ng_app1 {
+      artifact "OCI: Go API / worker / origin\nНациональные рабочие секреты NG" as ng_code1
+    }
+    database "PostgreSQL NG primary" as ng_db1
+  }
+  node "Lagos: независимый домен 2" as ng_site2 {
+    node "VM приложения NG-2" as ng_app2 {
+      artifact "Тот же OCI image\nРезерв рабочих секретов NG" as ng_code2
+    }
+    database "PostgreSQL NG sync-standby" as ng_db2
+  }
+  node "Abuja: национальная резервная площадка" as ng_dr {
+    node "Тёплый recovery compute\nОбразы / конфигурация / резерв ёмкости" as ng_warm
+    database "Изолированные backup + WAL NG\nAge ≤15 мин; retention 35 дней" as ng_backup
+    component "Ключи NG / recovery\nНезависимое восстановление\nНациональная телеметрия" as ng_keys
+  }
+  node "Второй оператор внутри Нигерии\nДоговор / площадка пока не выбраны" as ng_independent {
+    database "Независимая национальная копия NG\nОтдельные account / credentials" as ng_backup2
+  }
+}
+
+package "Кения — выбранный профиль: Angani Nairobi\nДве заявленные площадки; национальный DR вне города — условие" as ke {
+  node "Национальный вход KE\nDNS / TLS / health checks" as ke_edge
+  node "Nairobi: ЦОД 1" as ke_site1 {
+    node "VM приложения KE-1\nРабочие секреты KE" as ke_app1
+    database "PostgreSQL KE primary" as ke_db1
+  }
+  node "Nairobi: ЦОД 2" as ke_site2 {
+    node "VM приложения KE-2\nРезерв рабочих секретов KE" as ke_app2
+    database "PostgreSQL KE sync-standby" as ke_db2
+  }
+  node "Независимый DR в Кении\nВне общей городской причины отказа\nПровайдер пока не выбран" as ke_dr {
+    node "Тёплый recovery compute\nКвоты / образы / доступ заранее" as ke_warm
+    database "Изолированные backup + WAL KE\nAge ≤15 мин; retention 35 дней" as ke_backup
+    component "Ключи KE / recovery\nНезависимое восстановление\nНациональная телеметрия" as ke_keys
+  }
+}
+
+package "ЮАР — после пилота; сейчас не закупается" as za {
+  node "AWS af-south-1 / Cape Town\nНе менее двух AZ" as za_main {
+    component "Будущее приложение ZA\nPostgreSQL / storage / KMS" as za_stack
+  }
+  node "Google africa-south1 / Johannesburg\nТёплый резерв в той же стране" as za_dr {
+    component "Будущий recovery ZA\nBackup + ключ, независимый от AWS KMS" as za_recovery
+  }
+}
+
+users --> ng_edge : HTTPS / национальный gateway NG
+users --> ke_edge : HTTPS / национальный gateway KE
+ng_edge --> ng_app1 : основной доступ / health routing
+ng_edge --> ng_app2 : основной доступ / health routing
+ng_app1 --> ng_db1 : SQL / TLS; один writer
+ng_app2 --> ng_db1 : SQL / TLS; один writer
+ng_db1 --> ng_db2 : synchronous WAL / TLS\nRPO=0 при сохранном standby
+ng_db1 --> ng_backup : asynchronous WAL / full\nТолько Nigeria; RPO≤15 мин
+ng_backup --> ng_backup2 : изолированная национальная копия\nПроверить независимость / age
+ng_backup --> ng_warm : проверенный restore / promote\nRTO≤60 мин при потере площадки
+ng_keys --> ng_warm : recovery ключей / policy NG
+ng_warm ..> ng_edge : ручное переключение после fencing\nНикакого зарубежного fallback
+
+ke_edge --> ke_app1 : основной доступ / health routing
+ke_edge --> ke_app2 : основной доступ / health routing
+ke_app1 --> ke_db1 : SQL / TLS; один writer
+ke_app2 --> ke_db1 : SQL / TLS; один writer
+ke_db1 --> ke_db2 : synchronous WAL / TLS\nПри допустимой измеренной latency
+ke_db1 --> ke_backup : asynchronous WAL / full\nТолько Kenya; RPO≤15 мин
+ke_backup --> ke_warm : проверенный restore / promote\nRTO≤60 мин только после подготовки
+ke_keys --> ke_warm : recovery ключей / policy KE
+ke_warm ..> ke_edge : ручное переключение после fencing\nВнегородской резерв ещё не создан
+
+za_stack ..> za_recovery : будущая репликация / backup только ZA\nНезависимое decrypt / restore
+
+ng_backup2 -[hidden]down-> ke_app1
+ke_warm -[hidden]down-> za_stack
+
+note bottom of ng_site2
+Два fault domains Lagos не доказывают два независимых ЦОД.
+Отказ всего Lagos покрывается только подготовленным Abuja DR.
+end note
+note bottom of ke_dr
+Две площадки Nairobi не закрывают потерю всего города.
+Нет договора / ключей / теста — нет гарантии RTO≤60 минут.
+end note
+note bottom of za
+Нет репликации NG/KE в ЮАР или Europe.
+Потеря всех разрешённых национальных площадок:
+остановка операций, RTO не гарантирован.
+end note
+
+legend bottom
+  Сплошная линия — поток выбранной целевой схемы, ещё не доказанный развёртыванием.
+  Пунктир — ручное переключение / будущий ZA, а не активная репликация.
+  RTO включает обнаружение, решение, ключи, DNS и проверки.
+  Один primary: без подтверждённого fencing финансовые записи запрещены.
+endlegend
+footer Источники: артефакт 3 «Юридическое письмо», с.1–2; Architecture Vision Task2, раздел 3; НФТ Task3: восстановление primary (NFR-09), площадки (NFR-10); ADR-003 «Стратегия размещения данных» и план переключения Task4. Assumptions: договоры, мощности и DR не подтверждены.
+@enduml
