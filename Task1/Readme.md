@@ -4,10 +4,10 @@
 
 | Файл | Что содержит / когда читать |
 |---|---|
-| [stakeholder-matrix.md](africa-delivery-task-1-2026-10-04/stakeholder-matrix.md) | Интересы, влияние, приоритет при конфликте и способ коммуникации |
-| [architecture-canvas.md](africa-delivery-task-1-2026-10-04/architecture-canvas.md) | Девять блоков канваса: ценность, участники, функции, качество, контекст, решения, составные части, технологии, риски и пробелы |
-| [contradictions.md](africa-delivery-task-1-2026-10-04/contradictions.md) | Конфликтующие позиции, источники, риск, владелец решения и рекомендация |
-| [open-questions.md](africa-delivery-task-1-2026-10-04/open-questions.md) | Адресные вопросы, заблокированные решения, дедлайны и допущения при отсутствии ответа |
-| [stakeholder-influence-interest.puml](africa-delivery-task-1-2026-10-04/diagrams/stakeholder-influence-interest.puml), [PNG](africa-delivery-task-1-2026-10-04/diagrams/stakeholder-influence-interest.png) | Диаграмма «Влияние / интерес»: исходник и изображение |
+| [stakeholder-matrix.md](stakeholder-matrix.md) | Интересы, влияние, приоритет при конфликте и способ коммуникации |
+| [architecture-canvas.md](architecture-canvas.md) | Девять блоков канваса: ценность, участники, функции, качество, контекст, решения, составные части, технологии, риски и пробелы |
+| [contradictions.md](contradictions.md) | Конфликтующие позиции, источники, риск, владелец решения и рекомендация |
+| [open-questions.md](open-questions.md) | Адресные вопросы, заблокированные решения, дедлайны и допущения при отсутствии ответа |
+| [stakeholder-influence-interest.puml](Diagrams/stakeholder-influens-interest.puml), [PNG](Diagrams/stakeholder-influence-interest.png) | Диаграмма «Влияние / интерес»: исходник и изображение |
 
 **Связь со следующим этапом:** противоречия, ограничения и канвас задают критерии сравнения архитектур в Task2. Канвас отражает этап выяснения требований; последующий выбор стиля фиксируется в ADR-001.
